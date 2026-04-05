@@ -1,32 +1,12 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <link rel="stylesheet" href="css/global.css">
-        <title>MCSR Ranked Analyzer</title>
-    </head>
-    <body>
-        <div class="page-background"></div>
-        <header class="mc-header">
-            <img src="https://wallpaperaccess.com/minecraft-block" class="logo">
-            <h1 class="title">MCSR Ranked Analyzer</h1>
-        </header>
-
-        <main class="content-box">
-            <h2>Search Player</h2>
-
-            <input id="searchInput" class="mc-input" placeholder="Enter username">
-            <button class="mc-button" onclick="goToProfile()">Search</button>
-        </main>
-
-        <script>
-            function goToProfile() {
-                const user = document.getElementById("searchInput").value;
-                if (!user) {
-                    alert("Enter a username");
-                    return;
-                }
-                window.location.href = `profile.html?user=${user}`;
-            }
-        </script>
-    </body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MCSR Ranked Analyzer</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
 </html>

@@ -9,7 +9,7 @@ body {
 }
 
 .page-background {
-    background-image: url('minecraft-block.webp');
+    background-image: url('/minecraft-block.webp');
     background-size: cover;
     background-position: center;
     filter: brightness(0.65);

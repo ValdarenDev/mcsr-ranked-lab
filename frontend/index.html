@@ -2,6 +2,7 @@
 <html>
     <head>
         <link rel="stylesheet" href="css/global.css">
+        <title>MCSR Ranked Analyzer</title>
     </head>
     <body>
         <div class="page-background"></div>
@@ -12,8 +13,20 @@
 
         <main class="content-box">
             <h2>Search Player</h2>
-            <input class="mc-input">
-            <button class="mc-button">Search</button>
+
+            <input id="searchInput" class="mc-input" placeholder="Enter username">
+            <button class="mc-button" onclick="goToProfile()">Search</button>
         </main>
+
+        <script>
+            function goToProfile() {
+                const user = document.getElementById("searchInput").value;
+                if (!user) {
+                    alert("Enter a username");
+                    return;
+                }
+                window.location.href = `profile.html?user=${user}`;
+            }
+        </script>
     </body>
 </html>

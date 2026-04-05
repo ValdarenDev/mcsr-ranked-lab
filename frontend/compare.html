@@ -2,6 +2,7 @@
 <html>
     <head>
         <link rel="stylesheet" href="css/global.css">
+        <title>MCSR Ranked Analyzer</title>
     </head>
     <body>
         <div class="page-background"></div>
@@ -11,13 +12,15 @@
         </header>
 
         <main class="content-box">
-            <h2>Compare Players</h2>
+            <h2>Search Player</h2>
 
             <input id="p1" class="mc-input" placeholder="Player 1">
             <input id="p2" class="mc-input" placeholder="Player 2">
-            <button class="mc-button">Compare</button>
+            <button class="mc-button" onclick="startCompare()">Compare</button>
 
             <div id="comparisonResults"></div>
         </main>
+
+        <script type="module" src="js/compare.js"></script>
     </body>
 </html>

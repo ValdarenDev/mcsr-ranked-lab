@@ -2,6 +2,7 @@
 <html>
 <head>
     <link rel="stylesheet" href="css/global.css">
+    <title>MCSR Ranked Analyzer</title>
 </head>
 <body>
     <div class="page-background"></div>
@@ -10,12 +11,106 @@
         <h1 class="title">MCSR Ranked Analyzer</h1>
     </header>
 
-    <main class="content-box">
-        <h2 id="playerName">Loading...</h2>
+    <!--Dropdown menu: select a characteristic and be automatically
+        taken to that section of the player's profile-->
+    <nav class="profile-nav">
+        <select class="mc-input" onchange="location.href=this.value">
+            <option value="#ign">IGN</option>
+            <option value="#rank">Rank</option>
+            <option value="#elo">Elo</option>
+            <option value="#pb">Personal Best</option>
+            <option value="#trends">Recent Trends</option>
+            <option value="#avg-time">Average Completion Time</option>
+            <option value="#win-streak">Win Streak</option>
+            <option value="#wl-record">Record (W-L)</option>
+            <option value="#runs">Runs</option>
+        </select>
+    </nav>
 
-        <div id="statsSection"></div>
-        <div id="splitChart"></div>
-        <div id="matchHistory"></div>
+    <main class="content-box profile-layout">
+        <!--IGN-->
+        <section id="ign" class="mc-panel">
+            <h2>IGN</h2>
+            <div id="ign-content"></div>
+        </section>
+
+        <!--Rank-->
+        <section id="rank" class="mc-panel">
+            <h2>Rank</h2>
+            <div id="rank-content"></div>
+        </section>
+
+        <!--Elo-->
+        <section id="elo" class="mc-panel">
+            <h2>Elo</h2>
+            <div id="elo-content"></div>
+        </section>
+
+        <!--Personal Best-->
+        <section id="pb" class="mc-panel">
+            <h2>Personal Best</h2>
+            <div id="pb-content"></div>
+        </section>
+
+        <!--Recent Trends-->
+        <section id="trends" class="mc-panel">
+            <h2>Recent Trends</h2>
+            <canvas id="winLossTrendChart"></canvas>
+            <canvas id="completionTrendChart"></canvas>
+        </section>
+
+        <!--Average Completion Time-->
+        <section id="avg-time" class="mc-panel">
+            <h2>Average Completion Time</h2>
+            <div id="avg-time-content"></div>
+        </section>
+
+        <!--Win Streak-->
+        <section id="win-streak" class="mc-panel">
+            <h2>Win Streak</h2>
+            <div id="win-streak-content"></div>
+        </section>
+
+        <!--Record (W-L)-->
+        <section id="wl-record" class="mc-panel">
+            <h2>Record (W-L)</h2>
+            <div id="wl-record-content"></div>
+        </section>
+
+        <!--Runs-->
+        <section id="runs" class="mc-panel">
+            <h2>Runs</h2>
+            <div class="run-sort-container">
+                <label for="run-sort" class="sort-label">Sort Runs:</label>
+                <select id="run-sort" class="mc-input">
+                    <option value="date-desc">Date (Newest → Oldest)</option>
+                    <option value="date-asc">Date (Oldest → Newest)</option>
+                    <option value="time-asc">Time (Fastest → Slowest)</option>
+                    <option value="time-desc">Time (Slowest → Fastest)</option>
+                    <option value="result-win">Result (Wins)</option>
+                    <option value="result-loss">Result (Losses)</option>
+                    <option value="opponent-asc">Opponent (A → Z)</option>
+                    <option value="opponent-desc">Opponent (Z → A)</option>
+                </select>
+
+            </div>
+            <p>Total Runs: <span id="total-runs"></span></p>
+            <table class="run-table">
+                <thead>
+                    <tr>
+                        <th>Result</th>
+                        <th>Time</th>
+                        <th>Opponent</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="run-history-body"></tbody>
+            </table>
+        </section>
     </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="js/profile.js"></script>
+        
 </body>
 </html>

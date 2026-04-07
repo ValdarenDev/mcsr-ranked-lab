@@ -1,33 +1,34 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
+import "../css/global.css";
 
-const HomePage = () => {
-  const [user, setUser] = useState("");
+export default function Home() {
+  const [ign, setIgn] = useState("");
   const navigate = useNavigate();
 
-  const goToProfile = () => {
-    if (!user.trim()) {
-      alert("Enter a username");
-      return;
-    }
-    navigate(`/profile?user=${encodeURIComponent(user.trim())}`);
+  const handleSearch = () => {
+    if (!ign.trim()) return;
+    navigate(`/profile/${encodeURIComponent(ign.trim())}`);
   };
 
   return (
     <Layout>
-      <h2>Search Player</h2>
-      <input
-        className="mc-input"
-        placeholder="Enter username"
-        value={user}
-        onChange={(e) => setUser(e.target.value)}
-      />
-      <button className="mc-button" onClick={goToProfile}>
-        Search
-      </button>
+      <div className="home-container">
+        <h1>MCSR Ranked Analyzer</h1>
+
+        <input
+          className="mc-input"
+          type="text"
+          placeholder="Search IGN"
+          value={ign}
+          onChange={(e) => setIgn(e.target.value)}
+        ></input>
+
+        <button className="mc-button" onClick={handleSearch}>
+          Search
+        </button>
+      </div>
     </Layout>
   );
-};
-
-export default HomePage;
+}

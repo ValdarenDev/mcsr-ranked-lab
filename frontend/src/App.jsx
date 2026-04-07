@@ -10,7 +10,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/compare" element={<ComparePage />} />
-        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/profile/:ign" element={<ProfilePage />} />
       </Routes>
     </BrowserRouter>
   );

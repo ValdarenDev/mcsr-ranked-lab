@@ -1,5 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
+import { getProfile } from "../logic/profileLogic";
 import Chart from "chart.js/auto";
 import "../css/global.css";
 
@@ -11,6 +12,15 @@ export default function ProfilePage() {
   const [sortMode, setSortMode] = useState({ column: "date", direction: "desc" });
   const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(1);
+  const [profileInfo, setProfileInfo] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const result = await getProfile(ign);
+      setProfileInfo(result);
+    }
+    fetchData();
+  }, [ign]);
 
   // Chart refs
   const winLossRef = useRef(null);
@@ -19,12 +29,12 @@ export default function ProfilePage() {
   // Sample data (replace later with API)
   const sampleProfile = {
     ign: ign || "Unknown Player",
-    rank: 4821,
-    elo: 1524,
-    averageCompletionTime: "6:42",
-    winStreak: 4,
-    wlRecord: { wins: 58, losses: 41 },
-    personalBest: { time: "5:21", date: "2026-03-12" },
+    rank: profileInfo[0],
+    elo: profileInfo[1],
+    averageCompletionTime: profileInfo[2],
+    winStreak: profileInfo[3],
+    wlRecord: profileInfo[4],
+    personalBest: profileInfo[5],
     recentTrends: {
       winLossTrend: [1, 0, 1, 1, 1, 0, 1, 1, 1, 1],
       completionTimes: [7.10, 6.85, 6.60, 6.55, 6.40, 6.30, 6.42]
@@ -204,13 +214,12 @@ export default function ProfilePage() {
 
       <section id="wl-section" className="mc-panel">
         <h3>Win-Loss Record</h3>
-        <p>{sampleProfile.wlRecord.wins} - {sampleProfile.wlRecord.losses}</p>
+        <p>{sampleProfile.wlRecord}</p>
       </section>
 
       <section id="pb-section" className="mc-panel">
         <h3>Personal Best</h3>
-        <p>{sampleProfile.personalBest.time}</p>
-        <p>{sampleProfile.personalBest.date}</p>
+        <p>{sampleProfile.personalBest}</p>
       </section>
 
       <section id="trends-section" className="mc-panel">

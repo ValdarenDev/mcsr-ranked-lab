@@ -15,18 +15,23 @@ export default function Home() {
   return (
     <Layout>
       <div className="home-container">
-        <h1>MCSR Ranked Analyzer</h1>
+        <h1>Search Player</h1>
+        <p className="home-subtitle">Track stats, trends, and performance for any MCSR player.</p>
 
-        <input
-          className="mc-input"
-          type="text"
-          placeholder="Search IGN"
-          value={ign}
-          onChange={(e) => setIgn(e.target.value)}
-        ></input>
+        <div className="search-row">
+          <input
+            className="mc-input home-input"
+            type="text"
+            placeholder="Search IGN..."
+            value={ign}
+            autoFocus
+            onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+            onChange={(e) => setIgn(e.target.value)}
+          ></input>
+        </div>
 
         <button className="mc-button" onClick={handleSearch}>
-          Search
+          Search Player
         </button>
       </div>
     </Layout>

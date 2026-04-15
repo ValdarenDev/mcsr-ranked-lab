@@ -163,55 +163,42 @@ export default function ProfilePage() {
     <main className="profile-layout">
       <h2>{sampleProfile.ign}</h2>
 
-      <section className="profile-nav">
-        <select onChange={(e) => {
-          const sectionId = e.target.value;
-          if (sectionId) {
-            document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
-          }
-        }}>
-          <option value="">Jump to section...</option>
-          <option value="rank-section">Rank</option>
-          <option value="elo-section">Elo</option>
-          <option value="avg-section">Average Completion Time</option>
-          <option value ="streak-section">Win Streak</option>
-          <option value="wl-section">Win-Loss Record</option>
-          <option value="pb-section">Personal Best</option>
-          <option value="trends-section">Recent Trends</option>
-          <option value="runs-section">Runs</option>
-        </select>
-      </section>
+      <div className="stat-row">
+        <section id="rank-section" className="mc-panel stat-box">
+          <h3>Rank</h3>
+          <p>{sampleProfile.rank}</p>
+        </section>
 
-      <section id="rank-section" className="mc-panel">
-        <h3>Rank</h3>
-        <p>{sampleProfile.rank}</p>
-      </section>
+        <section id="elo-section" className="mc-panel stat-box">
+          <h3>Elo</h3>
+          <p>{sampleProfile.elo}</p>
+        </section>
+      </div>
 
-      <section id="elo-section" className="mc-panel">
-        <h3>Elo</h3>
-        <p>{sampleProfile.elo}</p>
-      </section>
+      <div className="stat-row">
+        <section id="wl-section" className="mc-panel stat-box">
+          <h3>Win-Loss Record</h3>
+          <p>{sampleProfile.wlRecord.wins} - {sampleProfile.wlRecord.losses}</p>
+        </section>
+        
+        <section id="streak-section" className="mc-panel stat-box">
+          <h3>Win Streak</h3>
+          <p>{sampleProfile.winStreak}</p>
+        </section>
+      </div>
+      
+      <div className="stat-row">
+        <section id="avg-section" className="mc-panel stat-box">
+            <h3>Average Completion Time</h3>
+            <p>{sampleProfile.averageCompletionTime}</p>
+          </section>
 
-      <section id="avg-section" className="mc-panel">
-        <h3>Average Completion Time</h3>
-        <p>{sampleProfile.averageCompletionTime}</p>
-      </section>
-
-      <section id="streak-section" className="mc-panel">
-        <h3>Win Streak</h3>
-        <p>{sampleProfile.winStreak}</p>
-      </section>
-
-      <section id="wl-section" className="mc-panel">
-        <h3>Win-Loss Record</h3>
-        <p>{sampleProfile.wlRecord.wins} - {sampleProfile.wlRecord.losses}</p>
-      </section>
-
-      <section id="pb-section" className="mc-panel">
-        <h3>Personal Best</h3>
-        <p>{sampleProfile.personalBest.time}</p>
-        <p>{sampleProfile.personalBest.date}</p>
-      </section>
+        <section id="pb-section" className="mc-panel stat-box">
+          <h3>Personal Best</h3>
+          <p>{sampleProfile.personalBest.time}</p>
+          <p>{sampleProfile.personalBest.date}</p>
+        </section>
+      </div>
 
       <section id="trends-section" className="mc-panel">
         <h3>Recent Trends</h3>

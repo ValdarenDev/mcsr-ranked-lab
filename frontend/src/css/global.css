@@ -58,20 +58,6 @@ body {
     transform: scale(1.05);
 }
 
-
-/* Dropdown nav in Profile Page */
-/* Number of entries dropdown in Profile Page added */
-.profile-nav select {
-    padding: 10px;
-    background: #2A2A2A;
-    border: 3px solid #3c8527;
-    color: white;
-    font-size: 14px;
-    outline: none;
-    display: block;
-    margin: 10px auto;
-}
-
 .run-page-size select {
     width: 90px;
     padding: 10px;
@@ -215,18 +201,63 @@ canvas {
 /* Containers for the two charts */
 .charts-row {
     display: flex;
+    flex-wrap: wrap;
     gap: 20px;
-    justify-content: space-between;
-    align-items: stretch;
-    margin-top: 20px;
 }
 
 .charts-row canvas {
     flex: 1;
-    height: 300px !important;
+    max-width: 48%;
+    height: auto !important;
+    aspect-ratio: 1 / 1;
     background: #1E1E1E;
     border: 3px solid #3c8527;
     border-radius: 6px;
     padding: 10px;
     box-sizing: border-box;
+    align-self: flex-start;
+}
+
+/* Subtitle under the title on HomePage */ 
+.home-subtitle {
+    color: #cccccc;
+    font-size: 12px;
+    margin-top: -10px;
+    margin-bottom: 25px;
+    text-shadow: 2px 2px #000;
+}
+
+.home-input {
+    width: 75%;
+    font-size: 14px;
+    margin-bottom: 20px;
+    transition: 0.15s;
+}
+
+.home-input:focus {
+    border-color: #80FF00;
+    box-shadow: 0 0 10px #80FF00;
+}
+
+.home-search-btn {
+    width: 50%;
+    margin-top: 10px;
+    font-size: 14px;
+    transition: 0.15s;
+}
+
+.home-search-btn:hover {
+    transform: scale(1.05);
+}
+
+/* New formatting for Profile Page, side by side information*/
+/* Other features are unaffected by the changes with this put further down the code */
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.stat-box {
+    flex: 1;
 }

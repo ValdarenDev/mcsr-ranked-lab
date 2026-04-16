@@ -29,11 +29,13 @@ export default function Home() {
             onChange={(e) => setIgn(e.target.value)}
           ></input>
         </div>
-
+    
         <button className="mc-button" onClick={handleSearch}>
           Search Player
         </button>
       </div>
+      
+      <p className="faq-link">Questions? <a href="/faq">FAQ</a></p>
     </Layout>
   );
 }

@@ -14,6 +14,8 @@ export default function Home() {
 
   return (
     <Layout>
+      <p className="compare-top-link"><a href="/compare">Compare Players</a></p>
+      
       <div className="home-container">
         <h1>Search Player</h1>
         <p className="home-subtitle">Track stats, trends, and performance for any MCSR player.</p>
@@ -34,7 +36,7 @@ export default function Home() {
           Search Player
         </button>
       </div>
-      
+
       <p className="faq-link">Questions? <a href="/faq">FAQ</a></p>
     </Layout>
   );

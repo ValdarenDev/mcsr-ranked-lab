@@ -59,6 +59,23 @@ body {
     transform: scale(1.05);
 }
 
+.compare-top-link {
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: -20px;
+    font-size: 12px;
+    color: #cccccc;
+}
+
+.compare-top-link a {
+    color: #80FF00;
+    text-decoration: none;
+}
+
+.compare-top-link a:hover {
+    text-decoration: underline;
+}
+
 .run-page-size select {
     width: 90px;
     padding: 10px;
@@ -341,11 +358,11 @@ canvas {
 .faq-answer {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.25s ease-out;
+    transition: max-height 0.3s ease-out;
 }
 
 .faq-item.open .faq-answer {
-    max-height: 200px;
+    max-height: 500px;
     margin-top: 10px;
 }
 
@@ -358,7 +375,9 @@ canvas {
 
 .faq-item,
 .faq-item p,
-.faq-item h3 {
+.faq-item h3,
+.faq-question,
+.faq-answer {
     font-family: 'Inter', sans-serif;
     letter-spacing: 0;
 }

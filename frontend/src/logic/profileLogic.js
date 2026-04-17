@@ -22,6 +22,34 @@ export async function getProfile(username) {
     }
 }
 
+export async function getPlayerRuns(username, count = 10) {
+    const res1 = await axios.get(`/api/mojang/${username}`);
+    const res2 = await axios.get(`https://mcsrranked.com/api/users/${username}/matches?type=2&count=${count}&excludedecay=true`);
+
+    const uuid = res1.data.id;
+    const playerRuns = res2.data.data;
+
+    return playerRuns.map(run => {
+        const { result, players } = run;
+
+        const isForfeit = result.time == null;
+        const isDraw = result.uuid == null;
+        const isWin = result.uuid === uuid;
+
+        const opponent =
+            players[0].uuid === uuid
+                ? players[1].nickname
+                : players[0].nickname;
+
+        return {
+            time: isForfeit ? "Forfeit" : timeConversion(result.time),
+            result: isDraw ? "Draw" : isWin ? "Win" : "Loss",
+            opponent
+        };
+    });
+}
+
+
 function timeConversion(time) {
     let minutes = Math.floor(time / 60000);
     let seconds = Math.floor((time  % 60000) / 1000);

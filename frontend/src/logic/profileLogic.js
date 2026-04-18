@@ -30,9 +30,9 @@ export async function getPlayerRuns(username, count = 10) {
     const playerRuns = res2.data.data;
 
     return playerRuns.map(run => {
-        const { result, players } = run;
+        const { result, players, forfeited } = run;
 
-        const isForfeit = result.time == null;
+        const isForfeit = forfeited == true;
         const isDraw = result.uuid == null;
         const isWin = result.uuid === uuid;
 

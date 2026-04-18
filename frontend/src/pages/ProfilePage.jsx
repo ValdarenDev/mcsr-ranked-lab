@@ -43,6 +43,8 @@ export default function ProfilePage() {
     fetchRuns();
   }, [ign, pageSize]);
 
+  console.log(runs);
+
   // Convert "m:ss" → seconds
   const toSeconds = (t) => {
     const [m, s] = t.split(":").map(Number);
@@ -109,6 +111,20 @@ export default function ProfilePage() {
     const losses = runs.filter(r => r.result.includes("Loss")).length;
     const draws = runs.filter(r => r.result.includes("Draw")).length;
 
+    const filteredTimes = runs.map(r => {
+      const isWin = r.result.includes("Win");
+      const isForfeit = r.time.includes("Forfeit");
+
+      if (isWin && !isForfeit) {
+        return toSeconds(r.time);
+      }
+
+      return null;
+    });
+
+    const maxTime = Math.max(...filteredTimes.filter(v => v !== null));
+    const yMax = maxTime + 180;
+
     const winLossChart = new Chart(winLossRef.current, {
       type: "pie",
       data: {
@@ -126,11 +142,21 @@ export default function ProfilePage() {
         labels: runs.map((_, i) => `Run ${i + 1}`),
         datasets: [{
           label: "Completion Time (seconds)",
-          data: runs.map(r => toSeconds(r.time)),
+          data: filteredTimes,
           borderColor: "#00C3FF",
           backgroundColor: "rgba(0,195,255,0.2)",
-          tension: 0.3
+          tension: 0.3,
+          spanGaps: true
         }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            min: 0,
+            max: yMax
+          }
+        }
       }
     });
 

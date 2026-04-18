@@ -74,7 +74,11 @@ export default function FAQ() {
     
     return (
         <Layout>
-            <p className="faq-top-link"><a href="/">Search Player</a></p>
+            <p className="faq-top-links">
+                <a href="/">Search Player</a>
+                <span className="faq-separator"> | </span>
+                <a href="/compare">Compare Players</a>
+            </p>
 
             <div className="faq-container">
                 <h1 className="faq-title">FAQ</h1>

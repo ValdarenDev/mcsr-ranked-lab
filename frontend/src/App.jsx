@@ -4,6 +4,7 @@ import HomePage from "./pages/HomePage";
 import ComparePage from "./pages/ComparePage";
 import ProfilePage from "./pages/ProfilePage";
 import FAQ from "./pages/FAQ";
+import ComparisonPage from "./pages/ComparisonPage.jsx";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/compare" element={<ComparePage />} />
         <Route path="/profile/:ign" element={<ProfilePage />} />
         <Route path="/faq" element={<FAQ />}/>
+        <Route path="/comparison" element={<ComparisonPage />}/>
       </Routes>
     </BrowserRouter>
   );

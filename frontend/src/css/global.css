@@ -208,7 +208,7 @@ body {
 /* charts in Profile Page*/
 canvas {
     width: 100%;
-    margin-top: 20px;
+    margin-top: 0;
     background: #1E1E1E;
     border: 3px solid #3c8527;
     border-radius: 6px;
@@ -223,17 +223,36 @@ canvas {
     gap: 20px;
 }
 
-.charts-row canvas {
+/* Chart container */
+.chart-box {
     flex: 1;
     max-width: 48%;
-    height: auto !important;
-    aspect-ratio: 1 / 1;
+    height: 820px;
+    display: flex;
+}
+
+.chart-box canvas,
+.chart-box .no-data {
+    width: 100%;
+    height: 100%;
+    margin-top: 0;
     background: #1E1E1E;
     border: 3px solid #3c8527;
     border-radius: 6px;
     padding: 10px;
     box-sizing: border-box;
-    align-self: flex-start;
+}
+
+.chart-box .no-data {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 36px;
+    font-weight: bold;
+    text-align: center;
+    color: #80FF00;
+    text-shadow: 0 0 10px #80FF00;
+    font-family: 'Press Start 2P', cursive;
 }
 
 /* Subtitle under the title on HomePage */ 

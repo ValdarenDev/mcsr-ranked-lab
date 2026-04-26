@@ -16,6 +16,7 @@ export default function ProfilePage() {
   const [pageSize, setPageSize] = useState(10);
   const [page, setPage] = useState(1);
   const [error, setError] = useState(null);
+  const [notEnoughData, setNotEnoughData] = useState(false);
 
   // Chart refs
   const winLossRef = useRef(null);
@@ -42,8 +43,6 @@ export default function ProfilePage() {
     };
     fetchRuns();
   }, [ign, pageSize]);
-
-  console.log(runs);
 
   // Convert "m:ss" → seconds
   const toSeconds = (t) => {
@@ -94,80 +93,96 @@ export default function ProfilePage() {
   useEffect(() => {
     setSortedRuns(sortRuns(sortMode.column, sortMode.direction));
     setPage(1);
-  }, [runs, sortMode]);
+  }, [runs, sortMode.column, sortMode.direction]);
 
   // Pagination
   const totalPages = Math.ceil(sortedRuns.length / pageSize);
   const paginatedRuns = sortedRuns.slice((page - 1) * pageSize, page * pageSize);
 
-  // Charts
   useEffect(() => {
-    if (!winLossRef.current || !completionRef.current) return;
-
-    if (winLossRef.current._chartInstance) winLossRef.current._chartInstance.destroy();
-    if (completionRef.current._chartInstance) completionRef.current._chartInstance.destroy();
-
-    const wins = runs.filter(r => r.result.includes("Win")).length;
-    const losses = runs.filter(r => r.result.includes("Loss")).length;
-    const draws = runs.filter(r => r.result.includes("Draw")).length;
-
     const filteredTimes = runs.map(r => {
       const isWin = r.result.includes("Win");
       const isForfeit = r.time.includes("Forfeit");
-
-      if (isWin && !isForfeit) {
-        return toSeconds(r.time);
-      }
-
-      return null;
+      return isWin && !isForfeit ? toSeconds(r.time) : null;
     });
 
-    const maxTime = Math.max(...filteredTimes.filter(v => v !== null));
-    const yMax = maxTime + 180;
-
-    const winLossChart = new Chart(winLossRef.current, {
-      type: "pie",
-      data: {
-        labels: ["Wins", "Losses", "Draws"],
-        datasets: [{
-          data: [wins, losses, draws],
-          backgroundColor: ["#80FF00", "#FF4444", "#2196F3"]
-        }]
-      }
-    });
-
-    const completionChart = new Chart(completionRef.current, {
-      type: "line",
-      data: {
-        labels: runs.map((_, i) => `Run ${i + 1}`),
-        datasets: [{
-          label: "Completion Time (seconds)",
-          data: filteredTimes,
-          borderColor: "#00C3FF",
-          backgroundColor: "rgba(0,195,255,0.2)",
-          tension: 0.3,
-          spanGaps: true
-        }]
-      },
-      options: {
-        scales: {
-          y: {
-            beginAtZero: true,
-            min: 0,
-            max: yMax
-          }
-        }
-      }
-    });
-
-    winLossRef.current._chartInstance = winLossChart;
-    completionRef.current._chartInstance = completionChart;
-
-    return () => {
-      winLossChart.destroy();
-      completionChart.destroy();
-    };
+    const validPoints = filteredTimes.filter(v => v !== null).length;
+    setNotEnoughData(validPoints < 5);
   }, [runs]);
+
+  // Charts
+  useEffect(() => {
+    const id = setTimeout(() => {
+      if (!winLossRef.current) return;
+
+      if (winLossRef.current._chartInstance) {
+        winLossRef.current._chartInstance.destroy();
+      }
+
+      const wins = runs.filter(r => r.result.includes("Win")).length;
+      const losses = runs.filter(r => r.result.includes("Loss")).length;
+      const draws = runs.filter(r => r.result.includes("Draw")).length;
+
+      const winLossChart = new Chart(winLossRef.current, {
+        type: "pie",
+        data: {
+          labels: ["Wins", "Losses", "Draws"],
+          datasets: [{
+            data: [wins, losses, draws],
+            backgroundColor: ["#80FF00", "#FF4444", "#2196F3"]
+          }]
+        }
+      });
+
+      winLossRef.current._chartInstance = winLossChart;
+
+      if (completionRef.current?._chartInstance) {
+        completionRef.current._chartInstance.destroy();
+      }
+
+      if (!notEnoughData && completionRef.current) {
+        const filteredTimes = runs.map(r => {
+          const isWin = r.result.includes("Win");
+          const isForfeit = r.time.includes("Forfeit");
+          return isWin && !isForfeit ? toSeconds(r.time) : null;
+        });
+
+        const maxTime = Math.max(...filteredTimes.filter(v => v !== null));
+        const yMax = maxTime + 180;
+        const reversedTimes = [...filteredTimes].reverse();
+
+        const completionChart = new Chart(completionRef.current, {
+          type: "line",
+          data: {
+            labels: runs.map((_, i) => `Run ${i + 1}`),
+            datasets: [{
+              label: "Completion Time (seconds)",
+              data: reversedTimes,
+              borderColor: "#00C3FF",
+              backgroundColor: "rgba(0,195,255,0.2)",
+              tension: 0.3,
+              spanGaps: true
+            }]
+          },
+          options: {
+            maintainAspectRatio: false,
+            responsive: true,
+            scales: {
+              y: {
+                beginAtZero: true,
+                min: 0,
+                max: yMax
+              }
+            }
+          }
+        });
+
+        completionRef.current._chartInstance = completionChart;
+      }
+    }, 0);
+
+    return () => clearTimeout(id);
+  }, [runs, notEnoughData]);
 
   // Clickable table headers
   const handleSort = (column) => {
@@ -260,10 +275,18 @@ export default function ProfilePage() {
 
       <section id="trends-section" className="mc-panel">
         <h3>Recent Trends</h3>
-        <div className="charts-row">
-          <canvas ref={winLossRef}></canvas>
-          <canvas ref={completionRef}></canvas>
-        </div>
+          <div className="charts-row">
+            <div className="chart-box">
+              <canvas ref={winLossRef}></canvas>
+            </div>
+            <div className="chart-box">
+              {notEnoughData ? (
+                <div className="no-data">Not enough data</div>
+              ) : (
+                <canvas ref={completionRef}></canvas>
+              )}
+            </div>
+          </div>
       </section>
 
       <section id="runs-section" className="mc-panel">

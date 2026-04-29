@@ -14,8 +14,7 @@ export default function ComparePage() {
     "Win-Loss Record",
     "Personal Best (PB)",
     "Average Completion Time",
-    "Recent Trends",
-    "Run History"
+    "Rank"
   ];
 
   const [selectedFilters, setSelectedFilters] = useState([]);

@@ -109,6 +109,25 @@ body {
     gap: 30px;
 }
 
+.profile-layout h2 {
+    text-align: center;
+}
+
+/* Link at top of Profile Page to go back to Search */
+.profile-back-link {
+    text-align: left;
+    margin: 10px 0 -10px 5px;
+}
+
+.profile-back-link a {
+    color: #80FF00;
+    text-decoration: none;
+}
+
+.profile-back-link a:hover {
+    text-decoration: underline;
+}
+
 /* Panels for each section in Profile Page */
 .mc-panel {
     background: rgba(40, 40, 40, 0.9);
@@ -203,6 +222,18 @@ body {
     font-size: 14px;
     color: #80FF00;
     text-shadow: 2px 2px #000;
+}
+
+/* Opponent clickable name */
+.opponent-link {
+    color: #cccccc;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.opponent-link:hover {
+    text-decoration: underline;
+    color: #b4ff66;
 }
 
 /* charts in Profile Page*/
@@ -446,12 +477,16 @@ canvas {
 .compare-inputs {
     display: flex;
     flex-direction: column;
+    align-items: center;
     gap: 15px;
     width: 70%;
     margin: 0 auto 25px auto;
 }
 
 .compare-input {
+    width: 80%;
+    max-width: 600px;
+    min-width: 250px;
     font-size: 14px;
 }
 
@@ -492,7 +527,28 @@ canvas {
     color: #cccccc;
 }
 
+/* Comparison Page formatting */
 .comparison-results {
     margin-top: 30px;
     padding: 20px;
+}
+
+.comparison-results table {
+    margin-top: 20px;
+}
+
+.comparison-block {
+    text-align: center;
+    margin: 25px auto;
+}
+
+.comparison-heading {
+    font-size: 20px;
+    margin-bottom: 10px;
+    color: #80FF00;
+}
+
+.comparison-content p {
+    margin: 4px 0;
+    font-size: 15px;
 }

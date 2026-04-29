@@ -8,6 +8,7 @@ export default function ProfilePage() {
   const { ign } = useParams();
   const navigate = useNavigate();
 
+  // State vars
   const [searchIgn, setSearchIgn] = useState(ign);
   const [profileInfo, setProfileInfo] = useState([]);
   const [runs, setRuns] = useState([]);
@@ -100,14 +101,71 @@ export default function ProfilePage() {
   const paginatedRuns = sortedRuns.slice((page - 1) * pageSize, page * pageSize);
 
   useEffect(() => {
+    if (!winLossRef.current || !completionRef.current) return;
+
+    // destroys old charts to avoid duplicates
+    if (winLossRef.current._chartInstance) winLossRef.current._chartInstance.destroy();
+    if (completionRef.current._chartInstance) completionRef.current._chartInstance.destroy();
+
+    // Count results
+    const wins = runs.filter(r => r.result.includes("Win")).length;
+    const losses = runs.filter(r => r.result.includes("Loss")).length;
+    const draws = runs.filter(r => r.result.includes("Draw")).length;
+
+    // Filter valid completion times
     const filteredTimes = runs.map(r => {
       const isWin = r.result.includes("Win");
       const isForfeit = r.time.includes("Forfeit");
       return isWin && !isForfeit ? toSeconds(r.time) : null;
     });
 
-    const validPoints = filteredTimes.filter(v => v !== null).length;
-    setNotEnoughData(validPoints < 5);
+    const maxTime = Math.max(...filteredTimes.filter(v => v !== null));
+    const yMax = maxTime + 180;
+
+    // Pie chart for recent W/L
+    const winLossChart = new Chart(winLossRef.current, {
+      type: "pie",
+      data: {
+        labels: ["Wins", "Losses", "Draws"],
+        datasets: [{
+          data: [wins, losses, draws],
+          backgroundColor: ["#80FF00", "#FF4444", "#2196F3"]
+        }]
+      }
+    });
+
+    // Line chart for recent completion times
+    const completionChart = new Chart(completionRef.current, {
+      type: "line",
+      data: {
+        labels: runs.map((_, i) => `Run ${i + 1}`),
+        datasets: [{
+          label: "Completion Time (seconds)",
+          data: filteredTimes,
+          borderColor: "#00C3FF",
+          backgroundColor: "rgba(0,195,255,0.2)",
+          tension: 0.3,
+          spanGaps: true
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true,
+            min: 0,
+            max: yMax
+          }
+        }
+      }
+    });
+
+    winLossRef.current._chartInstance = winLossChart;
+    completionRef.current._chartInstance = completionChart;
+
+    return () => {
+      winLossChart.destroy();
+      completionChart.destroy();
+    };
   }, [runs]);
 
   // Charts
@@ -218,12 +276,20 @@ export default function ProfilePage() {
     );
   }
 
+  // Loading state
   if (profileInfo.length === 0) return <p>Loading...</p>;
 
+  // Profile page render
   return (
     <main className="profile-layout">
+      {/* Link to go back to the search page */}
+      <p className="profile-back-link">
+        <a href="/">&lt; Back to Search</a>
+      </p>
+      {/* Player IGN */}
       <h2>{ign}</h2>
 
+      {/* Dropdown to jump to section */}
       <section className="profile-nav">
         <select onChange={(e) => {
           const sectionId = e.target.value;
@@ -243,36 +309,43 @@ export default function ProfilePage() {
         </select>
       </section>
 
+      {/* Rank section */}
       <section id="rank-section" className="mc-panel">
         <h3>Rank</h3>
         <p>{profileInfo[0]}</p>
       </section>
 
+      {/* Elo section */}
       <section id="elo-section" className="mc-panel">
         <h3>Elo</h3>
         <p>{profileInfo[1]}</p>
       </section>
 
+      {/* Average time section */}
       <section id="avg-section" className="mc-panel">
         <h3>Average Completion Time</h3>
         <p>{profileInfo[2]}</p>
       </section>
 
+      {/* Win Streak section */}
       <section id="streak-section" className="mc-panel">
         <h3>Win Streak</h3>
         <p>{profileInfo[3]}</p>
       </section>
 
+      {/* W-L section */}
       <section id="wl-section" className="mc-panel">
         <h3>Win-Loss Record</h3>
         <p>{profileInfo[4]}</p>
       </section>
 
+      {/* Personal best section */}
       <section id="pb-section" className="mc-panel">
         <h3>Personal Best</h3>
         <p>{profileInfo[5]}</p>
       </section>
 
+      {/* Recent trends section with charts */}
       <section id="trends-section" className="mc-panel">
         <h3>Recent Trends</h3>
           <div className="charts-row">
@@ -289,9 +362,11 @@ export default function ProfilePage() {
           </div>
       </section>
 
+      {/* Runs history table (default is sorted and paginated) */}
       <section id="runs-section" className="mc-panel">
         <h3>Runs</h3>
 
+        {/* Page size selector */}
         <div className="run-page-size">
           <label className="entries-label">Show</label>
 
@@ -307,6 +382,7 @@ export default function ProfilePage() {
 
         <p>Total Runs: {sortedRuns.length}</p>
 
+        {/* Runs table */}
         <table className="run-table">
           <thead>
             <tr>
@@ -331,12 +407,21 @@ export default function ProfilePage() {
                   {run.result}
                 </td>
                 <td>{run.time}</td>
-                <td>{run.opponent}</td>
+                {/* Opponents are clickable that takes user to their profile page */}
+                <td>
+                  <a
+                    href={`/profile/${run.opponent}`}
+                    className="opponent-link"
+                  >
+                    {run.opponent}
+                  </a>
+                </td>
               </tr>
             ))}
           </tbody>
         </table>
 
+        {/* Pagination controls */}
         <div className="pagination">
           <button disabled={page === 1} onClick={() => setPage(page - 1)}>Prev</button>
           <span>Page {page}/{totalPages}</span>

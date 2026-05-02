@@ -21,7 +21,7 @@ export async function getPlayerProfile(username) {
 
         return [playerUsername, userRank, userElo, userAverage, userWinstreak, userWinLoss, userPb];
     } catch {
-        return ["This user has not played ranked before, please try a different IGN!"];
+        return ["Invalid Player! Try a different IGN!"];
     }
 }
 

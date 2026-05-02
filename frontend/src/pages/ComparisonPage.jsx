@@ -33,10 +33,10 @@ export default function ComparisonPage() {
                         ign: raw[0],
                         rank: raw[1],
                         elo: raw[2],
-                        pb: raw[3],
+                        avg: raw[3],
                         streak: raw[4],
                         wl: raw[5],
-                        avg: raw[6]
+                        pb: raw[6]
                     };
 
                     results.push({

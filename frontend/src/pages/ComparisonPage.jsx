@@ -1,80 +1,81 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
+import { getPlayerProfile } from "../logic/compareLogic";
 import Layout from "../components/Layout";
 import "../css/global.css";
 
 export default function ComparisonPage() {
     const { state } = useLocation();
     const { players = [], filters = [] } = state || {};
+    const [playerData, setPlayerData] = useState([]);
 
-    // Sample data for 4 players
-    const sampleData = {
-        StupidSteve: {
-            rank: 4821,
-            elo: 1420,
-            pb: "18:20",
-            avg: "24:10",
-            wl: "62-48",
-            streak: 3
-        },
-        NetherNinja: {
-            rank: 1290,
-            elo: 1580,
-            pb: "16:55",
-            avg: "22:40",
-            wl: "75-39",
-            streak: 5
-        },
-        Block_Breaker: {
-            rank: 5530,
-            elo: 1330,
-            pb: "19:40",
-            avg: "25:30",
-            wl: "58-52",
-            streak: 1
-        },
-        Macaroni32: {
-            rank: 3012,
-            elo: 1495,
-            pb: "17:30",
-            avg: "23:15",
-            wl: "68-44",
-            streak: 4
-        },
+    const getProfileValue = (ign, key) => {
+        const entry = playerData.find(p => p.ign === ign);
+        return entry?.profile?.[key] ?? "—";
     };
 
-    // Normalize filter names so they match the table keys
+    const getPlayerIGN = (ign) => {
+        const entry = playerData.find(p => p.ign === ign);
+        return entry?.profile?.ign ?? ign;
+    };
+
+    useEffect(() => {
+        const load = async () => {
+            const results = [];
+
+            for (const ign of players) {
+                if (!ign.trim()) continue;
+
+                try {
+                    const raw = await getPlayerProfile(ign);
+
+                    const profile = {
+                        ign: raw[0],
+                        rank: raw[1],
+                        elo: raw[2],
+                        pb: raw[3],
+                        streak: raw[4],
+                        wl: raw[5],
+                        avg: raw[6]
+                    };
+
+                    results.push({
+                        ign,
+                        profile
+                    });
+
+                } catch (err) {
+                    console.error("Failed to fetch player:", ign, err);
+                }
+            }
+
+            setPlayerData(results);
+        };
+
+        load();
+    }, [players]);
+
     const normalizeFilter = (f) => {
         if (f === "ELO Rating") return "Elo";
-        if (f === "Elo") return "Elo";
-
         if (f === "Personal Best (PB)") return "Personal Best (PB)";
         if (f === "Average Completion Time") return "Average Completion Time";
         if (f === "Win-Loss Record") return "Win-Loss Record";
         if (f === "Rank") return "Rank";
         if (f === "Win Streak") return "Win Streak";
-
-        // Filters that should not appear in table
-        if (f === "Recent Trends") return null;
-        if (f === "Run History") return null;
-
         return null;
-    }
+    };
 
-    // Maps normalized 
     const filterMap = {
         "Rank": { key: "rank", label: "Rank" },
         "Elo": { key: "elo", label: "Elo" },
         "Personal Best (PB)": { key: "pb", label: "Personal Best" },
         "Average Completion Time": { key: "avg", label: "Average Time" },
         "Win-Loss Record": { key: "wl", label: "W-L" },
-        "Win Streak": { key: "streak", label: "Streak" },
-    }
+        "Win Streak": { key: "streak", label: "Streak" }
+    };
 
-    // This will only show players that exist in the sample data
-    const validPlayers = players.filter(p => sampleData[p]);
+    const validPlayers = playerData.map(p => p.ign);
 
-    // Filters that actually map to table columns
     const tableFilters = filters
         .map(normalizeFilter)
         .filter(f => f && filterMap[f]);
@@ -95,13 +96,13 @@ export default function ComparisonPage() {
                     <h3 className="comparison-heading">Players</h3>
                     <div className="comparison-content">
                         {validPlayers.length > 0 ? (
-                            validPlayers.map((p, i) => <p key={i}>{p}</p>)
+                            validPlayers.map((p, i) => <p key={i}>{getPlayerIGN(p)}</p>)
                         ) : (
                             <p>No valid players selected</p>
                         )}
                     </div>
                 </div>
-                
+
                 {/* See the filters that were applied */}
                 <div className="comparison-block">
                     <h3 className="comparison-heading">Filters Applied</h3>
@@ -113,7 +114,7 @@ export default function ComparisonPage() {
                         )}
                     </div>
                 </div>
-                
+
                 {/* Comparison table */}
                 <div className="comparison-results mc-panel">
                     <h3>Player stats comparison</h3>
@@ -134,9 +135,11 @@ export default function ComparisonPage() {
                             <tbody>
                                 {validPlayers.map((p, i) => (
                                     <tr key={i}>
-                                        <td>{p}</td>
+                                        <td>{getPlayerIGN(p)}</td>
                                         {tableFilters.map((f, j) => (
-                                            <td key={j}>{sampleData[p][filterMap[f].key]}</td>
+                                            <td key={j}>
+                                                {getProfileValue(p, filterMap[f].key)}
+                                            </td>
                                         ))}
                                     </tr>
                                 ))}

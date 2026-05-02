@@ -17,7 +17,7 @@ export default function ComparePage() {
     "Rank"
   ];
 
-  const [selectedFilters, setSelectedFilters] = useState([]);
+  const [selectedFilters, setSelectedFilters] = useState(filterOptions);
 
   const toggleFilter = (filter) => {
     if (selectedFilters.includes(filter)) {

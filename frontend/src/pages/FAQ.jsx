@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Layout from "../components/Layout";
 import "../css/global.css";
+import InlineExplain from "../components/InlineExplain";
 
 export default function FAQ() {
     const [openItems, setOpenItems] = useState([]);
@@ -71,6 +72,41 @@ export default function FAQ() {
             a: "All data is pulled from the official MCSR Ranked API and updated in real time."
         },
     ];
+
+    const HIGHLIGHT_TERMS = [
+        "Elo",
+        "Elo Rating",
+        "Personal Best (PB)",
+        "Personal Best",
+        "Win-Loss Record",
+        "W-L Record",
+        "Win Streak",
+        "Run",
+        "Forfeit",
+        "Rank",
+        "Recent Trends",
+        "Run History"
+    ];
+
+    const renderHighlights = (text) => {
+        if (!text || typeof text !== "string") return text;
+
+        const sorted = [...HIGHLIGHT_TERMS].sort((a, b) => b.length - a.length);
+        const escaped = sorted.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+        const regex = new RegExp(`(${escaped.join("|")})`, "gi");
+
+        const parts = text.split(regex);
+
+        return parts.map((part, i) => {
+            if (!part) return null;
+            const match = sorted.find(t => t.toLowerCase() === part.toLowerCase());
+            if (match) {
+                return <InlineExplain key={i} term={match}>{part}</InlineExplain>;
+            }
+
+            return <React.Fragment key={i}>{part}</React.Fragment>;
+        });
+    };
     
     return (
         <Layout>
@@ -98,7 +134,7 @@ export default function FAQ() {
                             </h3>
 
                             <div className="faq-answer">
-                                <p>{item.a}</p>
+                                <p>{renderHighlights(item.a)}</p>
                             </div>
                         </div>
                     );

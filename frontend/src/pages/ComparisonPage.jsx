@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import { getPlayerProfile } from "../logic/compareLogic";
 import Layout from "../components/Layout";
 import "../css/global.css";
+import InlineExplain from "../components/InlineExplain";
 
 export default function ComparisonPage() {
     const { state } = useLocation();
@@ -108,7 +109,7 @@ export default function ComparisonPage() {
                     <h3 className="comparison-heading">Filters Applied</h3>
                     <div className="comparison-content">
                         {filters.length > 0 ? (
-                            filters.map((f, index) => <p key={index}>{f}</p>)
+                            filters.map((f, index) => <p key={index}><InlineExplain term={f}>{f}</InlineExplain></p>)
                         ) : (
                             <p>No filters selected</p>
                         )}

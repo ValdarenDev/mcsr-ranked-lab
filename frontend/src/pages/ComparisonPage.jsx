@@ -5,6 +5,21 @@ import Layout from "../components/Layout";
 import "../css/global.css";
 import InlineExplain from "../components/InlineExplain";
 
+const DEFAULT_EXPLANATIONS = {
+  "Elo": "A rating system that updates after each match to estimate player skill.",
+  "ELO Rating": "A rating system that updates after each match to estimate player skill.",
+  "Personal Best (PB)": "The player's fastest valid completion time recorded on their profile.",
+  "Personal Best": "The player's fastest valid completion time recorded on their profile.",
+  "Win-Loss Record": "A simple tally of wins and losses from recorded runs.",
+  "W-L Record": "A simple tally of wins and losses from recorded runs.",
+  "Win Streak": "A sequence of consecutive wins (or losses) a player currently has.",
+  "Run": "An individual match or attempt recorded in the run history.",
+  "Forfeit": "A match that ended without a valid completion, often excluded from PB calculations.",
+  "Rank": "A global position based on performance relative to other players.",
+  "Recent Trends": "Charts and summaries that show how performance has changed over time.",
+  "Run History": "A chronological list of recorded runs and match results."
+};
+
 export default function ComparisonPage() {
     const { state } = useLocation();
     const { players = [], filters = [] } = state || {};
@@ -81,6 +96,15 @@ export default function ComparisonPage() {
         .map(normalizeFilter)
         .filter(f => f && filterMap[f]);
 
+    const visibleFilterText = (rawFilter) => {
+        if (rawFilter && typeof rawFilter === "object") {
+            if (typeof rawFilter.label === "string") return rawFilter.label;
+            try { return JSON.stringify(rawFilter); } catch (e) { return String(rawFilter); }
+        }
+        const key = String(rawFilter ?? "");
+        return DEFAULT_EXPLANATIONS[key] ?? key;
+    }
+
     return (
         <Layout>
             <div className="compare-container">
@@ -108,8 +132,17 @@ export default function ComparisonPage() {
                 <div className="comparison-block">
                     <h3 className="comparison-heading">Filters Applied</h3>
                     <div className="comparison-content">
-                        {filters.length > 0 ? (
-                            filters.map((f, index) => <p key={index}><InlineExplain term={f}>{f}</InlineExplain></p>)
+                        {(Array.isArray(filters) && filters.length > 0) ? (
+                            filters.map((f, index) => {
+                                const termProp = (typeof f === "string") ? f : (f?.label ?? String(f));
+                                return (
+                                <div className="filter-item" key={index} style={{ marginBottom: 8 }}>
+                                    <InlineExplain term={termProp}>
+                                    {termProp}
+                                    </InlineExplain>
+                                </div>
+                                );
+                            })
                         ) : (
                             <p>No filters selected</p>
                         )}

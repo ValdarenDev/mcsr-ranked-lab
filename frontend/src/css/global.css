@@ -766,6 +766,45 @@ canvas {
     color: black;
 }
 
+.player-input-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.player-input-row .player-input, .mc-input.compare-input {
+    box-sizing: border-box;
+    flex: 1;
+}
+
+.remove-player-btn {
+    height: 28px;
+    min-width: 28px;
+    padding: 0 6px;
+    line-height: 28px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 2px solid #1E1E1E;
+    background: #3c8527;
+    color: #fff;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remove-player-btn:hover,
+.remove-player-btn:focus {
+    background: #80FF00;
+    color: #000;
+    transform: translateY(-50%) scale(1.03);
+}
+
+.remove-player-btn.mc-button {
+    padding: 0;
+}
+
 .filter-btn {
     background: #3c8527;
 }
@@ -811,6 +850,13 @@ canvas {
 .comparison-content p {
     margin: 4px 0;
     font-size: 15px;
+}
+
+.compare-container .comparison-content .highlight-term {
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    color: inherit;
 }
 
 /* Inline explanations */

@@ -45,6 +45,12 @@ export default function ComparePage() {
     setPlayers([...players, ""]);
   };
 
+  const removePlayer = (index) => {
+    if (index < 0 || index >= players.length) return;
+    const updated = players.filter((_, i) => i !== index);
+    setPlayers(updated.length ? updated : [""]);
+  };
+
   const handleCompare = async () => {
     navigate("/comparison", {
       state: {
@@ -63,13 +69,27 @@ export default function ComparePage() {
 
         <div className="compare-inputs">
           {players.map((p, index) => (
-            <input
+            <div
               key={index}
-              className="mc-input compare-input"
-              placeholder={`Player ${index + 1}`}
-              value={p}
-              onChange={(e) => handlePlayerChange(index, e.target.value)}
-            />
+              className="player-input-row"
+            >
+              <input
+                className="mc-input compare-input player-input"
+                placeholder={`Player ${index + 1}`}
+                value={p}
+                onChange={(e) => handlePlayerChange(index, e.target.value)}
+              />
+              {players.length > 2 && (
+                <button
+                  type="button"
+                  className="mc-button remove-player-btn"
+                  onClick={() => removePlayer(index)}
+                  aria-label={`Remove player ${index + 1}`}
+                >
+                  ×
+                </button>
+              )}
+            </div>
           ))}
         </div>
 

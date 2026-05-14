@@ -1,9 +1,10 @@
 import React from "react";
+import blockImg from "../assets/minecraft-block.png"
 
 const Header = () => (
   <header className="mc-header">
     <img
-      src="https://wallpaperaccess.com/minecraft-block"
+      src={blockImg}
       className="logo"
       alt="Minecraft block"
     />

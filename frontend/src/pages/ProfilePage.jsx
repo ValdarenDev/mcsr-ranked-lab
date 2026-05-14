@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { getProfile, getPlayerRuns } from "../logic/profileLogic";
+import Layout from "../components/Layout";
 import Chart from "chart.js/auto";
 import "../css/global.css";
 
@@ -281,153 +282,155 @@ export default function ProfilePage() {
 
   // Profile page render
   return (
-    <main className="profile-layout">
-      {/* Link to go back to the search page */}
-      <p className="profile-back-link">
-        <a href="/">&lt; Back to Search</a>
-      </p>
-      {/* Player IGN */}
-      <h2>{ign}</h2>
+    <Layout>
+      <main className="profile-layout">
+        {/* Link to go back to the search page */}
+        <p className="profile-back-link">
+          <a href="/">&lt; Back to Search</a>
+        </p>
+        {/* Player IGN */}
+        <h2>{ign}</h2>
 
-      {/* Dropdown to jump to section */}
-      <section className="profile-nav">
-        <select onChange={(e) => {
-          const sectionId = e.target.value;
-          if (sectionId) {
-            document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
-          }
-        }}>
-          <option value="">Jump to section...</option>
-          <option value="rank-section">Rank</option>
-          <option value="elo-section">Elo</option>
-          <option value="avg-section">Average Completion Time</option>
-          <option value="streak-section">Win Streak</option>
-          <option value="wl-section">Win-Loss Record</option>
-          <option value="pb-section">Personal Best</option>
-          <option value="trends-section">Recent Trends</option>
-          <option value="runs-section">Runs</option>
-        </select>
-      </section>
-
-      {/* Rank section */}
-      <section id="rank-section" className="mc-panel">
-        <h3>Rank</h3>
-        <p>{profileInfo[0]}</p>
-      </section>
-
-      {/* Elo section */}
-      <section id="elo-section" className="mc-panel">
-        <h3>Elo</h3>
-        <p>{profileInfo[1]}</p>
-      </section>
-
-      {/* Average time section */}
-      <section id="avg-section" className="mc-panel">
-        <h3>Average Completion Time</h3>
-        <p>{profileInfo[2]}</p>
-      </section>
-
-      {/* Win Streak section */}
-      <section id="streak-section" className="mc-panel">
-        <h3>Win Streak</h3>
-        <p>{profileInfo[3]}</p>
-      </section>
-
-      {/* W-L section */}
-      <section id="wl-section" className="mc-panel">
-        <h3>Win-Loss Record</h3>
-        <p>{profileInfo[4]}</p>
-      </section>
-
-      {/* Personal best section */}
-      <section id="pb-section" className="mc-panel">
-        <h3>Personal Best</h3>
-        <p>{profileInfo[5]}</p>
-      </section>
-
-      {/* Recent trends section with charts */}
-      <section id="trends-section" className="mc-panel">
-        <h3>Recent Trends</h3>
-          <div className="charts-row">
-            <div className="chart-box">
-              <canvas ref={winLossRef}></canvas>
-            </div>
-            <div className="chart-box">
-              {notEnoughData ? (
-                <div className="no-data">Not enough data</div>
-              ) : (
-                <canvas ref={completionRef}></canvas>
-              )}
-            </div>
-          </div>
-      </section>
-
-      {/* Runs history table (default is sorted and paginated) */}
-      <section id="runs-section" className="mc-panel">
-        <h3>Runs</h3>
-
-        {/* Page size selector */}
-        <div className="run-page-size">
-          <label className="entries-label">Show</label>
-
-          <select value={pageSize} onChange={(e) => setPageSize(Number(e.target.value))}>
-            <option value={10}>10</option>
-            <option value={25}>25</option>
-            <option value={30}>30</option>
-            <option value={50}>50</option>
+        {/* Dropdown to jump to section */}
+        <section className="profile-nav">
+          <select onChange={(e) => {
+            const sectionId = e.target.value;
+            if (sectionId) {
+              document.getElementById(sectionId)?.scrollIntoView({ behavior: "smooth" });
+            }
+          }}>
+            <option value="">Jump to section...</option>
+            <option value="rank-section">Rank</option>
+            <option value="elo-section">Elo</option>
+            <option value="avg-section">Average Completion Time</option>
+            <option value="streak-section">Win Streak</option>
+            <option value="wl-section">Win-Loss Record</option>
+            <option value="pb-section">Personal Best</option>
+            <option value="trends-section">Recent Trends</option>
+            <option value="runs-section">Runs</option>
           </select>
+        </section>
 
-          <label className="entries-label">entries</label>
-        </div>
+        {/* Rank section */}
+        <section id="rank-section" className="mc-panel">
+          <h3>Rank</h3>
+          <p>{profileInfo[0]}</p>
+        </section>
 
-        <p>Total Runs: {sortedRuns.length}</p>
+        {/* Elo section */}
+        <section id="elo-section" className="mc-panel">
+          <h3>Elo</h3>
+          <p>{profileInfo[1]}</p>
+        </section>
 
-        {/* Runs table */}
-        <table className="run-table">
-          <thead>
-            <tr>
-              <th onClick={() => handleSort("result")}>Result</th>
-              <th onClick={() => handleSort("time")}>Time</th>
-              <th onClick={() => handleSort("opponent")}>Opponent</th>
-            </tr>
-          </thead>
-          <tbody>
-            {paginatedRuns.map((run, i) => (
-              <tr key={i}>
-                <td
-                  style={{
-                    color:
-                      run.result === "Win"
-                        ? "#4CAF50"
-                        : run.result === "Loss"
-                        ? "#FF4444"
-                        : "#2196F3"
-                  }}
-                >
-                  {run.result}
-                </td>
-                <td>{run.time}</td>
-                {/* Opponents are clickable that takes user to their profile page */}
-                <td>
-                  <a
-                    href={`/profile/${run.opponent}`}
-                    className="opponent-link"
-                  >
-                    {run.opponent}
-                  </a>
-                </td>
+        {/* Average time section */}
+        <section id="avg-section" className="mc-panel">
+          <h3>Average Completion Time</h3>
+          <p>{profileInfo[2]}</p>
+        </section>
+
+        {/* Win Streak section */}
+        <section id="streak-section" className="mc-panel">
+          <h3>Win Streak</h3>
+          <p>{profileInfo[3]}</p>
+        </section>
+
+        {/* W-L section */}
+        <section id="wl-section" className="mc-panel">
+          <h3>Win-Loss Record</h3>
+          <p>{profileInfo[4]}</p>
+        </section>
+
+        {/* Personal best section */}
+        <section id="pb-section" className="mc-panel">
+          <h3>Personal Best</h3>
+          <p>{profileInfo[5]}</p>
+        </section>
+
+        {/* Recent trends section with charts */}
+        <section id="trends-section" className="mc-panel">
+          <h3>Recent Trends</h3>
+            <div className="charts-row">
+              <div className="chart-box">
+                <canvas ref={winLossRef}></canvas>
+              </div>
+              <div className="chart-box">
+                {notEnoughData ? (
+                  <div className="no-data">Not enough data</div>
+                ) : (
+                  <canvas ref={completionRef}></canvas>
+                )}
+              </div>
+            </div>
+        </section>
+
+        {/* Runs history table (default is sorted and paginated) */}
+        <section id="runs-section" className="mc-panel">
+          <h3>Runs</h3>
+
+          {/* Page size selector */}
+          <div className="run-page-size">
+            <label className="entries-label">Show</label>
+
+            <select value={pageSize} onChange={(e) => setPageSize(Number(e.target.value))}>
+              <option value={10}>10</option>
+              <option value={25}>25</option>
+              <option value={30}>30</option>
+              <option value={50}>50</option>
+            </select>
+
+            <label className="entries-label">entries</label>
+          </div>
+
+          <p>Total Runs: {sortedRuns.length}</p>
+
+          {/* Runs table */}
+          <table className="run-table">
+            <thead>
+              <tr>
+                <th onClick={() => handleSort("result")}>Result</th>
+                <th onClick={() => handleSort("time")}>Time</th>
+                <th onClick={() => handleSort("opponent")}>Opponent</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {paginatedRuns.map((run, i) => (
+                <tr key={i}>
+                  <td
+                    style={{
+                      color:
+                        run.result === "Win"
+                          ? "#4CAF50"
+                          : run.result === "Loss"
+                          ? "#FF4444"
+                          : "#2196F3"
+                    }}
+                  >
+                    {run.result}
+                  </td>
+                  <td>{run.time}</td>
+                  {/* Opponents are clickable that takes user to their profile page */}
+                  <td>
+                    <a
+                      href={`/profile/${run.opponent}`}
+                      className="opponent-link"
+                    >
+                      {run.opponent}
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
 
-        {/* Pagination controls */}
-        <div className="pagination">
-          <button disabled={page === 1} onClick={() => setPage(page - 1)}>Prev</button>
-          <span>Page {page}/{totalPages}</span>
-          <button disabled={page === totalPages} onClick={() => setPage(page + 1)}>Next</button>
-        </div>
-      </section>
-    </main>
+          {/* Pagination controls */}
+          <div className="pagination">
+            <button disabled={page === 1} onClick={() => setPage(page - 1)}>Prev</button>
+            <span>Page {page}/{totalPages}</span>
+            <button disabled={page === totalPages} onClick={() => setPage(page + 1)}>Next</button>
+          </div>
+        </section>
+      </main>
+    </Layout>
   );
 }

@@ -28,6 +28,20 @@ body {
     margin-bottom: 30px;
 }
 
+.mc-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 20px;
+}
+
+.mc-header .logo {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    image-rendering: pixelated;
+}
+
 .mc-input {
     width: 80%;
     padding: 12px;

@@ -23,7 +23,7 @@ const DEFAULT_EXPLANATIONS = {
 };
 
 function isExactTermMatch(visibleText, term) {
-    if (!visibleText || !term) return False;
+    if (!visibleText || !term) return false;
 
     const lower = visibleText.toLowerCase();
     const t = term.toLowerCase();

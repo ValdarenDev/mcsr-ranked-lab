@@ -53,7 +53,20 @@ export default function FAQ() {
         },
         {
             q: "How often do stats update?",
-            a: "Stats update automatically when new match data is processed by the MCSR API."
+            a: (
+                <>
+                    Stats update automatically when new match data is processed by the MCSR API. This
+                    can be accessed through the {" "}
+                    <a
+                        href="https://docs.mcsrranked.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ color: "#80FF00" }}
+                    >
+                        MCSRRanked website      
+                    </a>.
+                </>
+            )
         },
         {
             q: "What are recent trends?",
@@ -104,7 +117,7 @@ export default function FAQ() {
 
         return parts.map((part, i) => {
             if (!part) return null;
-            
+
             const match = sorted.find(t => t.toLowerCase() === part.toLowerCase());
             if (match) {
                 return <InlineExplain key={i} term={match}>{part}</InlineExplain>;
@@ -140,7 +153,9 @@ export default function FAQ() {
                             </h3>
 
                             <div className="faq-answer">
-                                <p>{renderHighlights(item.a)}</p>
+                                <p>
+                                    {typeof item.a === "string" ? renderHighlights(item.a) : item.a}
+                                </p>
                             </div>
                         </div>
                     );

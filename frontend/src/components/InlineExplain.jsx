@@ -22,6 +22,15 @@ const DEFAULT_EXPLANATIONS = {
   "Run History": "A chronological list of recorded runs and match results."
 };
 
+function isExactTermMatch(visibleText, term) {
+    if (!visibleText || !term) return False;
+
+    const lower = visibleText.toLowerCase();
+    const t = term.toLowerCase();
+
+    return lower == t;
+}
+
 /* Module-level singleton to ensure only one popup is visible at a time */
 let __INLINE_EXPLAIN_CURRENT = null;
 function setCurrent(instance) {
@@ -198,27 +207,33 @@ export default function InlineExplain({ term, explanation, children }) {
     };
   }, []);
 
+  const shouldHighlight = isExactTermMatch(visibleText, term);
+
   return (
     <>
-      <span
-        ref={anchorRef}
-        className="highlight-term"
-        role="button"
-        tabIndex={0}
-        aria-haspopup="dialog"
-        aria-expanded={open}
-        data-explain={explain || ""}
-        onClick={onClick}
-        onKeyDown={onKeyDown}
-        onMouseEnter={onPointerEnter}
-        onMouseLeave={onPointerLeave}
-        onFocus={onFocus}
-        onBlur={onBlur}
-        onPointerEnter={onPointerEnter}
-        onPointerLeave={onPointerLeave}
-      >
-        {children || term}
-      </span>
+        {shouldHighlight ? (
+            <span
+                ref={anchorRef}
+                className="highlight-term"
+                role="button"
+                tabIndex={0}
+                aria-haspopup="dialog"
+                aria-expanded={open}
+                data-explain={explain || ""}
+                onClick={onClick}
+                onKeyDown={onKeyDown}
+                onMouseEnter={onPointerEnter}
+                onMouseLeave={onPointerLeave}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onPointerEnter={onPointerEnter}
+                onPointerLeave={onPointerLeave}
+            >
+                {visibleText}
+            </span>
+        ) : (
+            <span>{visibleText}</span>
+        )}
 
       {open && (
         <div

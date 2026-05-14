@@ -91,14 +91,20 @@ export default function FAQ() {
     const renderHighlights = (text) => {
         if (!text || typeof text !== "string") return text;
 
+        // Sort longest first so multi-word terms match correctly
         const sorted = [...HIGHLIGHT_TERMS].sort((a, b) => b.length - a.length);
+
+        // Escape regex characters
         const escaped = sorted.map(t => t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
-        const regex = new RegExp(`(${escaped.join("|")})`, "gi");
+
+        // Whole-word match only using \b boundaries
+        const regex = new RegExp(`\\b(${escaped.join("|")})\\b`, "gi");
 
         const parts = text.split(regex);
 
         return parts.map((part, i) => {
             if (!part) return null;
+            
             const match = sorted.find(t => t.toLowerCase() === part.toLowerCase());
             if (match) {
                 return <InlineExplain key={i} term={match}>{part}</InlineExplain>;
